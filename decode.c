@@ -5,6 +5,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+uint8_t get_msb4(uint8_t value)
+{
+    return (value >> 4) & 0x0F;
+}
+
 // ============================================================================
 // Dictionary Functions
 // ============================================================================
@@ -170,28 +175,6 @@ Dictionary_t* load_dictionary(const char* filename)
     return dict;
 }
 
-void print_dictionary(Dictionary_t* dict)
-{
-    for (uint32_t i = 0; i < dict->entry_count; i++) 
-    {
-        DictionaryEntry_t* entry = &dict->entries[i];
-        printf("=====================================================\n"
-               "[%u]\n"
-               "uint8_t format: %u\n"
-               "uint16_t sequence_number: %u\n"
-               "uint16_t child_pointer_offset: %u\n"
-               "uint16_t child_count: %u\n"
-               "uint8_t name_length: %u\n"
-               "uint16_t name_offset: %u\n"
-               "char* name: %s\n"
-               "=====================================================\n\n", 
-               i, entry->format, entry->sequence_number, 
-               entry->child_pointer_offset, entry->child_count, 
-               entry->name_length, entry->name_offset, entry->name
-        );
-    }
-}
-
 void free_dictionary(Dictionary_t* dict)
 {
     if (!dict) return;
@@ -232,7 +215,6 @@ DictionaryEntry_t* find_dictionary_entry(Dictionary_t* dict, DictionaryEntry_t* 
         search_count = parent->child_count;
     }
     
-    // Search in the specified range (parent's children or root level)
     for (uint32_t i = 0; i < search_count; i++) 
     {
         uint32_t index = start_index + i;
@@ -393,7 +375,7 @@ bool read_sflv(FILE* fp, SFLV_t* sflv)
         return false;
     }
 
-    // Because dictionary encodings do not include the dictionary selector flag bit. 
+    // Dictionary encodings do not include the dictionary selector flag bit. 
     // Separate it from sequence value itself
     sflv->dict_selector = sflv->sequence & 0x1;
     sflv->sequence = sflv->sequence >> 1;
@@ -455,7 +437,7 @@ bool read_sflv_from_buffer(BufferReader_t* reader, SFLV_t* sflv)
         return false;
     }
 
-    // Because dictionary encodings do not include the dictionary selector flag bit. 
+    // Dictionary encodings do not include the dictionary selector flag bit. 
     // Separate it from sequence value itself
     sflv->dict_selector = sflv->sequence & 0x1;
     sflv->sequence = sflv->sequence >> 1;
@@ -650,12 +632,12 @@ bool decode_real(DecoderContext_t* ctx, SFLV_t* sflv)
     } 
     else if (sflv->length == 1 && sflv->value) 
     {
-        // Some encodings use 1-byte REAL for small values - treat as integer
+        // Some encodings use 1-byte REAL
         fprintf(ctx->output_stream, "%u", (unsigned int)sflv->value[0]);
     } 
     else if (sflv->length == 2 && sflv->value) 
     {
-        // 2-byte value - could be half-precision float, but treat as integer for now
+        // 2-byte value - could be half-precision float
         uint16_t val = sflv->value[0] | (sflv->value[1] << 8);
         fprintf(ctx->output_stream, "%u", val);
     } 
@@ -692,7 +674,7 @@ bool decode_enum(DecoderContext_t* ctx, SFLV_t* sflv, DictionaryEntry_t* entry)
         return false;
     }
     
-    // Enum value is encoded as nnint - the sequence number for the enumeration option
+    // Enum value is encoded as nnint - the sequence number for the enumeration option (5.3.12)
     uint32_t enum_sequence = 0;
     
     if (sflv->length > 0 && sflv->value) 

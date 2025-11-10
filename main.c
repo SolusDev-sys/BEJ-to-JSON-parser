@@ -68,16 +68,13 @@ void print_help(const char* program_name)
     printf("USAGE:\n"
            "%s <command> [options] <filename> [options] <filename> [options] <filename>\n\n"
            "COMMANDS:\n"
-           "  <encode>\n"
-           "    OPTIONS:\n"
-           "      -s <file>     Schema dictionary file\n"
-           "      -a <file>     Annotation dictionary file\n"
-           "      -j <file>     JSON file for encoding\n"
            "  <decode>\n"
            "    OPTIONS:\n"
            "      -s <file>     Schema dictionary file\n"
            "      -a <file>     Annotation dictionary file\n"
-           "      -b <file>     BEJ encoded file for decoding\n", 
+           "      -b <file>     BEJ encoded file for decoding\n"
+           "    OPTIONAL ARGUMENTS:\n"
+           "      -v            Verbose\n", 
            program_name);
 }
 
@@ -169,7 +166,8 @@ int parse_decode_args(int argc, char* argv[], DecodeArgs_t* args)
 
 void BEJ_decode(DecodeArgs_t* args)
 {
-    if (args->verbose) {
+    if (args->verbose) 
+    {
         printf("=== BEJ Decoder Starting ===\n");
         printf("Schema Dictionary: %s\n", args->schemaDictionary);
         printf("Annotation Dictionary: %s\n", args->annotationDictionary);
@@ -190,7 +188,6 @@ void BEJ_decode(DecodeArgs_t* args)
     
     // Only use the dot if it comes after the last path separator (i.e., it's part of the filename, not directory)
     if (last_dot && (!last_separator || last_dot > last_separator)) {
-        // Copy up to the dot, then add .json
         size_t base_len = last_dot - input_filename;
         if (base_len >= sizeof(output_filename) - 6) {
             base_len = sizeof(output_filename) - 6;
@@ -202,7 +199,8 @@ void BEJ_decode(DecodeArgs_t* args)
         snprintf(output_filename, sizeof(output_filename), "%s.json", input_filename);
     }
     
-    if (args->verbose) {
+    if (args->verbose) 
+    {
         printf("Output File: %s\n", output_filename);
         printf("Starting decode process...\n");
     }
@@ -212,8 +210,11 @@ void BEJ_decode(DecodeArgs_t* args)
                          args->schemaDictionary, args->annotationDictionary))
     {
         fprintf(stderr, "Decoding failed\n");
-    } else {
-        if (args->verbose) {
+    } 
+    else 
+    {
+        if (args->verbose) 
+        {
             printf("=== Decoding Complete ===\n");
         }
     }

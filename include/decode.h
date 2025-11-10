@@ -1,11 +1,8 @@
 #ifndef DECODE_H
 #define DECODE_H
 
-// Number commented in () are section number
-
+// Number commented in () are section number of DSP0218_1.2.0
 // EXAMPLE "Dictionary entry structure (7.2.3.2)"
-// Section number is 7.2.3.2
-
 // For more information checkout DSP0218_1.2.0
 
 #include <stdio.h>
@@ -27,7 +24,8 @@
 #define BEJ_FORMAT_REGISTRY_ITEM        0x0B
 
 // Buffer reader structure for cross-platform memory reading
-typedef struct {
+typedef struct 
+{
     uint8_t* data;
     uint32_t size;
     uint32_t position;
@@ -67,7 +65,8 @@ typedef struct
 } Dictionary_t;
 
 // Decoder context
-typedef struct {
+typedef struct 
+{
     Dictionary_t* schema_dict;
     Dictionary_t* anno_dict;
     FILE* input_stream;
@@ -100,8 +99,6 @@ Dictionary_t* load_dictionary(const char* filename);
  * @param dict Dictionary to free
  */
 void free_dictionary(Dictionary_t* dict);
-
-void print_dictionary(Dictionary_t* dict);
 
 /**
  * Find dictionary entry by sequence number
