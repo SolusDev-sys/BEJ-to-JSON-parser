@@ -1,3 +1,13 @@
+/**
+ * @file decode.h
+ * @author Vladyslav Kolodii
+ * @brief Header file defining data structures, constants, and function prototypes
+ * @version 0.1
+ * @date 2025-11-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #ifndef DECODE_H
 #define DECODE_H
 
@@ -23,7 +33,7 @@
 #define BEJ_FORMAT_PROPERTY_ANNOTATION  0x0A
 #define BEJ_FORMAT_REGISTRY_ITEM        0x0B
 
-// Buffer reader structure for cross-platform memory reading
+/// Buffer reader structure for memory reading
 typedef struct 
 {
     uint8_t* data;
@@ -31,7 +41,7 @@ typedef struct
     uint32_t position;
 } BufferReader_t;
 
-// SFLV (Sequence, Format, Length, Value) structure (5.3.6 - 5.3.9)
+/// SFLV (Sequence, Format, Length, Value) structure (5.3.6 - 5.3.9)
 typedef struct 
 {
     uint32_t sequence;
@@ -41,7 +51,7 @@ typedef struct
     uint8_t* value;
 } SFLV_t;
 
-// Dictionary entry structure (7.2.3.2)
+/// Dictionary entry structure (7.2.3.2)
 typedef struct 
 {
     uint8_t format;
@@ -53,7 +63,7 @@ typedef struct
     char* name;
 } DictionaryEntry_t;
 
-// Dictionary structure (7.2.3.2)
+/// Dictionary structure (7.2.3.2)
 typedef struct 
 {
     DictionaryEntry_t* entries;
@@ -64,7 +74,7 @@ typedef struct
     uint32_t dictionary_size;
 } Dictionary_t;
 
-// Decoder context
+/// Decoder context
 typedef struct 
 {
     Dictionary_t* schema_dict;
@@ -103,7 +113,9 @@ void free_dictionary(Dictionary_t* dict);
 /**
  * Find dictionary entry by sequence number
  * @param dict Dictionary to search
+ * @param parent Pointer to the parent dictionary entry, or NULL to search the root level.
  * @param sequence Sequence number to find
+ * @param format BEJ data format, or -1 to ignore format.
  * @return Pointer to DictionaryEntry_t or NULL if not found
  */
 DictionaryEntry_t* find_dictionary_entry(Dictionary_t* dict, DictionaryEntry_t* parent, uint32_t sequence, int8_t format);

@@ -1,3 +1,13 @@
+/**
+ * @file test.cpp
+ * @author Vladyslav Kolodii
+ * @brief Handles Gtests
+ * @version 0.1
+ * @date 2025-11-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include <gtest/gtest.h>
 extern "C" {
 #include "decode.h"
@@ -7,14 +17,16 @@ extern "C" {
 // Utility Function Tests
 // -------------------------
 
-TEST(UtilityTests, GetMSB4_ReturnsCorrectBits) {
+TEST(UtilityTests, GetMSB4_ReturnsCorrectBits) 
+{
     EXPECT_EQ(get_msb4(0xF0), 0x0F);
     EXPECT_EQ(get_msb4(0xA5), 0x0A);
     EXPECT_EQ(get_msb4(0x00), 0x00);
     EXPECT_EQ(get_msb4(0x7F), 0x07);
 }
 
-TEST(BufferTests, ReadAndEOF_Behavior) {
+TEST(BufferTests, ReadAndEOF_Behavior) 
+{
     uint8_t data[] = {1, 2, 3, 4};
     BufferReader_t reader;
     init_buffer_reader(&reader, data, sizeof(data));
@@ -33,7 +45,8 @@ TEST(BufferTests, ReadAndEOF_Behavior) {
 // NNINT Reader Test
 // -------------------------
 
-TEST(NNINTTests, ReadNNINTFromBuffer_ValidCases) {
+TEST(NNINTTests, ReadNNINTFromBuffer_ValidCases) 
+{
     // length=2, value=0x3412 (little endian)
     uint8_t buf[] = {2, 0x12, 0x34};
     BufferReader_t reader;
@@ -44,7 +57,8 @@ TEST(NNINTTests, ReadNNINTFromBuffer_ValidCases) {
     EXPECT_EQ(val, 0x3412);
 }
 
-TEST(NNINTTests, ReadNNINTFromBuffer_InvalidLength) {
+TEST(NNINTTests, ReadNNINTFromBuffer_InvalidLength) 
+{
     uint8_t buf[] = {5, 0xAA}; // invalid length (5 > 4)
     BufferReader_t reader;
     init_buffer_reader(&reader, buf, sizeof(buf));
@@ -57,7 +71,8 @@ TEST(NNINTTests, ReadNNINTFromBuffer_InvalidLength) {
 // SFLV Reader Test
 // -------------------------
 
-TEST(SFLVTests, ReadSFLVFromBuffer_Basic) {
+TEST(SFLVTests, ReadSFLVFromBuffer_Basic) 
+{
     // NNINT (seq=0x02) -> length=1,value=0x04
     // format=0x30 (format=3)
     // NNINT (length=1,value=2)
@@ -80,7 +95,8 @@ TEST(SFLVTests, ReadSFLVFromBuffer_Basic) {
 // Decode Logic Tests
 // -------------------------
 
-TEST(DecodeTests, DecodeInteger_PositiveValue) {
+TEST(DecodeTests, DecodeInteger_PositiveValue) 
+{
     uint8_t bytes[] = {0x39, 0x30, 0x00, 0x00};
     SFLV_t sflv = {0, 0, BEJ_FORMAT_INTEGER, 4, bytes};
     DecoderContext_t ctx;
@@ -96,7 +112,8 @@ TEST(DecodeTests, DecodeInteger_PositiveValue) {
     EXPECT_NE(strstr(buffer, "12345"), nullptr);
 }
 
-TEST(DecodeTests, DecodeBoolean_TrueFalse) {
+TEST(DecodeTests, DecodeBoolean_TrueFalse) 
+{
     uint8_t val_true[] = {1};
     uint8_t val_false[] = {0};
 
@@ -119,7 +136,8 @@ TEST(DecodeTests, DecodeBoolean_TrueFalse) {
     EXPECT_NE(strstr(buf, "false"), nullptr);
 }
 
-TEST(DecodeTests, DecodeString_Basic) {
+TEST(DecodeTests, DecodeString_Basic) 
+{
     uint8_t text[] = {'H','i'};
     SFLV_t sflv = {0, 0, BEJ_FORMAT_STRING, 2, text};
     DecoderContext_t ctx;
@@ -139,7 +157,8 @@ TEST(DecodeTests, DecodeString_Basic) {
 // Decode Dispatcher Test
 // -------------------------
 
-TEST(DecodeTests, DecodeValue_DispatchInteger) {
+TEST(DecodeTests, DecodeValue_DispatchInteger) 
+{
     SFLV_t sflv = {0, 0, BEJ_FORMAT_INTEGER, 1, new uint8_t[1]{0x2A}};
     DecoderContext_t ctx;
     FILE* out = tmpfile();

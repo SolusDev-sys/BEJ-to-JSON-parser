@@ -1,14 +1,19 @@
+/**
+ * @file decode.c
+ * @author Vladyslav Kolodii
+ * @brief Implementation of BEJ (Binary Encoded JSON) decoding logic
+ * @version 0.1
+ * @date 2025-11-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "decode.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-uint8_t get_msb4(uint8_t value)
-{
-    return (value >> 4) & 0x0F;
-}
 
 // ============================================================================
 // Dictionary Functions
@@ -238,8 +243,6 @@ DictionaryEntry_t* find_dictionary_entry(Dictionary_t* dict, DictionaryEntry_t* 
     return NULL;
 }
 
-
-
 // ============================================================================
 // Buffer Reader Functions (Cross-platform replacement for fmemopen)
 // ============================================================================
@@ -355,7 +358,6 @@ bool read_nnint_from_buffer(BufferReader_t* reader, uint32_t* value)
     *value = result;
     return true;
 }
-
 
 // ============================================================================
 // SFLV Functions
@@ -494,10 +496,13 @@ void free_sflv(SFLV_t* sflv)
     }
 }
 
-
 // ============================================================================
 // Utility Functions
 // ============================================================================
+uint8_t get_msb4(uint8_t value)
+{
+    return (value >> 4) & 0x0F;
+}
 
 void write_indent(FILE* fp, int level)
 {
@@ -965,9 +970,6 @@ bool decode_bej_to_json(DecoderContext_t* ctx)
     }
 
     bool result = decode_value(ctx, &sflv, NULL);
-    
-    // Add final newline
-    fprintf(ctx->output_stream, "\n");
 
     // Flush output to ensure it's written
     fflush(ctx->output_stream);

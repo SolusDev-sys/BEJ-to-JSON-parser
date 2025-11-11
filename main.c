@@ -1,3 +1,13 @@
+/**
+ * @file main.c
+ * @author Vladyslav Kolodii
+ * @brief Entry point for the BEJ-to-JSON converter command-line utility.
+ * @version 0.1
+ * @date 2025-11-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
