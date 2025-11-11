@@ -818,10 +818,10 @@ bool decode_array(DecoderContext_t* ctx, SFLV_t* sflv, DictionaryEntry_t* entry)
         BufferReader_t reader;
         init_buffer_reader(&reader, sflv->value, sflv->length);
                 
-        uint32_t* array_length = 0;
-        if (!read_nnint_from_buffer(&reader, array_length)) 
+        uint32_t array_length;
+        if (!read_nnint_from_buffer(&reader, &array_length)) 
         {
-            fprintf(stderr, "Error: Failed to read SET length\n");
+            fprintf(stderr, "Error: Failed to read ARRAY length\n");
             return false;
         }
 
