@@ -145,7 +145,7 @@ Dictionary_t* load_dictionary(const char* filename)
         uint16_t name_pos = entry->name_offset;
 
        
-        if (name_pos >= 0 && name_pos < file_size) 
+        if (name_pos < file_size) 
         {
             uint8_t name_len = entry->name_length;
             if (entry->name_length > 0 && name_len < 255) 
@@ -418,8 +418,8 @@ bool read_sflv(FILE* fp, SFLV_t* sflv)
     {
         sflv->value = NULL;
     }
-    printf("SFLV: seq=%u, format=0x%02X, length=%u, value=0x%X, dict_selector=%u\n", 
-            sflv->sequence, sflv->format, sflv->length, sflv->value, sflv->dict_selector);
+    printf("SFLV: seq=%u, format=0x%02X, length=%u, dict_selector=%u\n", 
+            sflv->sequence, sflv->format, sflv->length, sflv->dict_selector);
     return true;
 }
 
@@ -480,8 +480,8 @@ bool read_sflv_from_buffer(BufferReader_t* reader, SFLV_t* sflv)
     {
         sflv->value = NULL;
     }
-    printf("SFLV_b: seq=%u, format=0x%02X, length=%u, value=0x%X, dict_selector=%u\n", 
-            sflv->sequence, sflv->format, sflv->length, sflv->value, sflv->dict_selector);
+    printf("SFLV_b: seq=%u, format=0x%02X, length=%u, dict_selector=%u\n", 
+            sflv->sequence, sflv->format, sflv->length, sflv->dict_selector);
     return true;
 }
 
@@ -818,7 +818,7 @@ bool decode_array(DecoderContext_t* ctx, SFLV_t* sflv, DictionaryEntry_t* entry)
         BufferReader_t reader;
         init_buffer_reader(&reader, sflv->value, sflv->length);
                 
-        uint32_t* array_length;
+        uint32_t* array_length = 0;
         if (!read_nnint_from_buffer(&reader, array_length)) 
         {
             fprintf(stderr, "Error: Failed to read SET length\n");
