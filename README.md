@@ -64,7 +64,7 @@ BEJ-to-JSON decode -s schema.bin -a annotation.bin -b example.bin -v
 
 Output JSON will be created with the same base name as the input BEJ file, e.g.:
 ```
-record.json
+example.json
 ```
 
 ---
